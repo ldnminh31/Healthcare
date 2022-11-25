@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 
@@ -14,7 +15,6 @@ const Container = styled.div`
     align-items: center;
     margin-bottom: 1rem;
     transition: 0.2s all ease-in-out;
-
     &:hover {
         background-color: rgba(0,0,0,0.1);
     }
@@ -33,15 +33,19 @@ const Title = styled.h1`
     font-size: 0.9rem;
     font-weight: 500;
     color: ${props => props.active ? props.theme.activeMenu : "#AAA5A5"};
+    text-decoration: none;
 `
 
-const MenuLink = ({ title, active, icon }) => {
-
+const MenuLink = ({ title, icon, path }) => {
+    const location = useLocation();
+    const active = path===location.pathname;
     return (
-        <Container active={active}>
-            <Span active={active} className="iconify" data-inline="false" data-icon={`mdi-light:${icon}`}></Span>
-            <Title active={active}>{title}</Title>
-        </Container>
+        <Link to={path}>
+            <Container active={active}>
+                <Span active={active} className="iconify" data-inline="false" data-icon={`mdi-light:${icon}`}></Span>
+                <Title active={active}>{title}</Title>
+            </Container>
+        </Link>
     )
 }
 

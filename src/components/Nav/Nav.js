@@ -1,13 +1,15 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from 'react';
+import styled from 'styled-components';
 // import ProfileImage from '../../assets/images/profilelg.png'
 
 // dropdown button lib
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import "bootstrap/dist/css/bootstrap.min.css";
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setAccount } from '../../redux/accountSlice';
 
 const Container = styled.div`
   display: flex;
@@ -26,7 +28,20 @@ const ProfileImg = styled.img`
 
 // dropdown menu
 
+
 const Nav = () => {
+  
+  const dispatch = useDispatch();
+  const account = useSelector((state)=>state.account);
+  const handleConnect = async () => {
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      dispatch(setAccount(accounts[0]))
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
   return (
     <Container>
       {/* Search */}
@@ -44,19 +59,18 @@ const Nav = () => {
       </Form>
 
       <DropdownButton
-        style={{ margin: "10px" }}
+        style={{ margin: '10px', display: account?'block':'none'}}
         variant="light"
-        size="sm"
+        size="m"
         id="dropdown-basic-button"
-        title="Setting "
+        title={account.substring(0,2)+'...'+account.slice(-4)}
       >
         <Dropdown.Item href="#/action-1">Profile</Dropdown.Item>
         <Dropdown.Item href="#/action-2">Switch Account</Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item href="#/action-3">Sign Out</Dropdown.Item>
       </DropdownButton>
-      {/* <MessageIcon className="iconify" data-inline="false" data-icon="mdi-light:email"></MessageIcon> */}
-      <ProfileImg src={require("../../assets/images/profilelg.png")} />
+      {!account && <Button onClick={handleConnect}>Kết nối ví</Button>}
     </Container>
   );
 };

@@ -2,6 +2,7 @@ import React from "react";
 import MenuLink from "./MenuLink";
 // import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 // import NotFound from "../../Pages/Notfound";
 
 const Container = styled.div`
@@ -13,15 +14,12 @@ const Container = styled.div`
 `;
 
 const Menu = () => {
+  const account = useSelector((state) => state.account);
   return (
     <Container>
-      {/* <Link to="/profile"><RouteSystem/></Link> */}
-
-
-      <MenuLink title="Homepage" icon={"home"} active />
-      <MenuLink title="Profile" icon={"file-multiple"} />
-      <MenuLink title="Management" icon={"bank"} />
-      <MenuLink title="Setting" icon={"cog"} />
+      <MenuLink title="Homepage" icon={"home"} path="/" />
+      {account && <MenuLink title="Profile" icon={"file-multiple"} path="/profile"/>}
+      <MenuLink title="Search" icon={"magnify"} path="/search" />
     </Container>
   );
 };
